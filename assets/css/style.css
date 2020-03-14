@@ -1,0 +1,17 @@
+h1 {
+    text-align: center;
+}
+p {
+    text-align: center;
+}
+
+.jumbotron {
+    margin: 20px;
+}
+.card {
+    margin: 20px;
+    
+}
+.card-heder {
+    background-color: dodgerblue;
+}
