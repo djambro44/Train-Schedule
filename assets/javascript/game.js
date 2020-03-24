@@ -55,17 +55,27 @@ $("document").ready(function () {
       <td>${train.name}</td>
       <td>${train.destination}</td>
       <td>${train.frequency}</td>
-      <td>Math Stuff</td>
-      <td>More Math Stuff</td>
+      <td>${train.time}</td>
+      <td>${train.minAway}</td>
     </tr>`)
   }
 
   //make function to calculate min away
-  function calculateMinAway(hour , min) {
-    var minAway;
+  function calculateMinAway(militarynow, firstTrainTime, frequency) {
+    var minAway = "";
+    var numAway;
+    var minNow = (militarynow.hour*60) + militarynow.minute;
+    var minFTT = (firstTrainTime.hour*60) + firstTrainTime.minute;
 
-
-
+    if (minNow < minFTT){
+     numAway = minFTT - minNow;
+     minAway = `${numAway} minutes`
+    } else if (minFTT < minNow){
+      numAway = minNow - minFTT
+      minAway = `${numAway} minutes`
+    } else if (minNow === minAway) {
+      minAway = "The train is here."
+    }
 
     return minAway;
   }
@@ -73,6 +83,7 @@ $("document").ready(function () {
   //make function to calculate min away
   function calculateNextArrival() {
     var nextArrival;
+    
 
 
 
@@ -82,30 +93,24 @@ $("document").ready(function () {
     return nextArrival;
   }
 
-
-  // database.ref().set({
-  //     newName: trainName
-  //   });
-  // database.ref().on("value", function(snapshot) {
-
-  //     console.log(snapshot.val());
-
-
-  //     trainName = snapshot.val();
-
-
-  //   }
-
-  //submit button on click function that send user input to html and the answer to both calculations 
+  function hourMin(stringTime){
+    var splitTime = stringTime.split(":");
+    var hour = parseInt(splitTime[0]);
+    var minute = parseInt(splitTime[1]);
+    return {
+      hour: hour,
+      minute: minute
+    }
+  }
+  
   $("#addTrainButton").on("click", function () {
     var newTrain = getuserInput();
     
-    var time = moment().format('h:mm');
-    var splitTime = time.split(":");
-    var hour = parseInt(splitTime[0]);
-    var min = parseInt(splitTime[1]);
-    console.log(hour , min);
-    newTrain.minAway = calculateMinAway(hour , min);
+    var time = moment().format('H:mm');
+    var militarynow = hourMin(time);
+    var firstTrainTime = hourMin(newTrain.time);
+    var frequency = parseInt(newTrain.frequency);
+    newTrain.minAway = calculateMinAway(militarynow, firstTrainTime, frequency);
     
     
     buildTrainRow(newTrain);
